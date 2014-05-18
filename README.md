@@ -4,9 +4,13 @@
 
 Alpha
 
+## Prerequisites
+
+A local installation of NodeJS and the Node Package Manager (npm). 
+
 ## Installation
 
-From the root directory of the the converter, execute the following lines:
+If Grunt is not installed globally on your computer, run `npm install -g grunt`. Then, from the root directory of the converter, type:
 
 ```
 $ npm install -g bower grunt-cli
