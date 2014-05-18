@@ -10,338 +10,358 @@
 		<canvas id ="canvas1"></canvas>
 		<h2>Generated Font:</h2>
 		<div id="source"></div>
-		<h2>Glyphs</h2>
-		<div id ="results"></div>
 
 		<script type=text/javascript src="../dependencies/jscanvas-1.0.5/jscanvas.js"></script>
 		<script type=text/javascript src="../dependencies/canvg-1.3/rgbcolor.js"></script>
 		<script type=text/javascript src="../dependencies/canvg-1.3/canvg.js"></script>
 		<script type=text/javascript src="converter.js"></script>
-
 		<script type="text/javascript">
-      // NB: all glyphs specified in 'glyphNames' get converted (when present in
-      // the font).
-      // If a string value is specified for a glyph name, the glyph will be
-      // renamed to that value;
-      // if the value is null, the original glyph name will be kept.
-      // additionally / alternatively, glyphs to include can be specified
-      // with a regular expression in autoAdd (to include all glyphs, set autoAdd
-      // to '.*');
-      // new glyph names specified in 'glyphNames' will also be set when the
-      // glyph is
-      // matched by a regular expression.
+		
       var config = {
+        /**
+         * the path to the SVG font file. Required.
+         */
         fontFile : '../dependencies/bravura-0.85/svg/Bravura.svg',
+        /**
+         * the path to a file with a glyph name map. Optional.
+         */
         glyphNamesFile : '../dependencies/smufl-metadata-0.85/glyphnames.json',
-        // scale : 1.385,
+        /**
+         * The glyph scale. Required.
+         *
+         * - `1` - the original size
+         * - `1.385` - with this ratio, single Bravura glyphs match the
+         * default Gonville glyphs in VexFlow.
+         */
         scale : 1,
-        // glyphNames : {
-        // // merken: uniE0A1 = CMN Breve!!
-        //
-        // // // medRenFlatHardB
-        // // uniE941 : null,
-        // // // medRenFlatSoftB
-        // // uniE940 : null,
-        // // // medRenFlatWithDot
-        // // uniE944 : null,
-        // // // medRenGClefCMN
-        // // uniE974 : null,
-        // // // medRenLiquescenceCMN
-        // // uniE972 : null,
-        // // // medRenLiquescentAscCMN
-        // // uniE976 : null,
-        // // // medRenLiquescentDescCMN
-        // // uniE977 : null,
-        // // // medRenNatural
-        // // uniE942 : null,
-        // // // medRenNaturalWithCross
-        // // uniE945 : null,
-        // // // medRenOriscusCMN
-        // // uniE97A : null,
-        // // // medRenPlicaCMN
-        // // uniE973 : null,
-        // // // medRenPunctumCMN
-        // // uniE975 : null,
-        // // // medRenQuilismaCMN
-        // // uniE978 : null,
-        // // // medRenSharpCroix alternateCodepoint: null, : : null, U+1D1CF:
-        // // null, ,
-        // // uniE943 : null,
-        // // // medRenStrophicusCMN
-        // // uniE979 : null,
-        // // // mensuralAlterationSign
-        // // uniE96C : null,
-        // // // mensuralBlackBrevis
-        // // uniE8E2 : null,
-        // // // mensuralBlackBrevisVoid
-        // // uniE8E6 : null,
-        // // // mensuralBlackDragma
-        // // uniE8EA : null,
-        // // // mensuralBlackLonga
-        // // uniE8E1 : null,
-        // // // mensuralBlackMaxima
-        // // uniE8E0 : null,
-        // // // mensuralBlackMinima
-        // // uniE8E4 : null,
-        // // // mensuralBlackMinimaVoid
-        // // uniE8E8 : null,
-        // // // mensuralBlackSemibrevis
-        // // uniE8E3 : null,
-        // // // mensuralBlackSemibrevisCaudata
-        // // uniE8E9 : null,
-        // // // mensuralBlackSemibrevisOblique
-        // // uniE8EB : null,
-        // // // mensuralBlackSemibrevisVoid
-        // // uniE8E7 : null,
-        // // // mensuralBlackSemiminima
-        // // uniE8E5 : null,
-        // // // mensuralCclef
-        // // uniE897 : null,
-        // // // mensuralCclefGregorian
-        // // uniE896 : null,
-        // // // mensuralCclefPetrucci
-        // // uniE898 : null,
-        // // // mensuralColorationEndRound
-        // // uniE96B : null,
-        // // // mensuralColorationEndSquare
-        // // uniE969 : null,
-        // // // mensuralColorationStartRound
-        // // uniE96A : null,
-        // // // mensuralColorationStartSquare
-        // // uniE968 : null,
-        // // // mensuralCombStemDiagonal
-        // // uniE8D0 : null,
-        // // // mensuralCombStemDown
-        // // uniE8CF : null,
-        // // // mensuralCombStemDownFlagExtended
-        // // uniE8D8 : null,
-        // // // mensuralCombStemDownFlagFlared
-        // // uniE8D6 : null,
-        // // // mensuralCombStemDownFlagFusa
-        // // uniE8DC : null,
-        // // // mensuralCombStemDownFlagLeft
-        // // uniE8D4 : null,
-        // // // mensuralCombStemDownFlagRight
-        // // uniE8D2 : null,
-        // // // mensuralCombStemDownFlagSemiminima
-        // // uniE8DA : null,
-        // // // mensuralCombStemUp
-        // // uniE8CE : null,
-        // // // mensuralCombStemUpFlagExtended
-        // // uniE8D7 : null,
-        // // // mensuralCombStemUpFlagFlared
-        // // uniE8D5 : null,
-        // // // mensuralCombStemUpFlagFusa
-        // // uniE8DB : null,
-        // // // mensuralCombStemUpFlagLeft
-        // // uniE8D3 : null,
-        // // // mensuralCombStemUpFlagRight
-        // // uniE8D1 : null,
-        // // // mensuralCombStemUpFlagSemiminima
-        // // uniE8D9 : null,
-        // // // mensuralCustosCheckmark
-        // // uniE966 : null,
-        // // // mensuralCustosDown
-        // // uniE963 : null,
-        // // // mensuralCustosTurn
-        // // uniE967 : null,
-        // // // mensuralCustosUp
-        // // uniE962 : null,
-        // // // mensuralFClefAncient
-        // // uniE893 : null,
-        // // // mensuralFclef
-        // // uniE894 : null,
-        // // // mensuralFclefGregorian
-        // // uniE892 : null,
-        // // // mensuralFclefPetrucci
-        // // uniE895 : null,
-        // // // mensuralGclef
-        // // uniE890 : null,
-        // // // mensuralGclefPetrucci
-        // // uniE891 : null,
-        // // // mensuralModusImperfectumVert
-        // // uniE8B8 : null,
-        // // // mensuralModusPerfectumVert
-        // // uniE8B7 : null,
-        // // // mensuralNoteheadLongaBlack
-        // // uniE8C4 : null,
-        // // // mensuralNoteheadLongaBlackVoid
-        // // uniE8C6 : null,
-        // // // mensuralNoteheadLongaVoidalternateCodepoint: null, : : null,
-        // // U+1D1B7: null, ,
-        // // uniE8C5 : null,
-        // // // mensuralNoteheadLongaWhite
-        // // uniE8C7 : null,
-        // // // mensuralNoteheadMaximaBlack
-        // // uniE8C0 : null,
-        // // // mensuralNoteheadMaximaBlackVoid
-        // // uniE8C2 : null,
-        // // // mensuralNoteheadMaximaVoidalternateCodepoint: null, : : null,
-        // // U+1D1B6: null, ,
-        // // uniE8C1 : null,
-        // // // mensuralNoteheadMaximaWhite
-        // // uniE8C3 : null,
-        // // // mensuralNoteheadMinimaWhite
-        // // uniE8CC : null,
-        // // // mensuralNoteheadSemibrevisBlackalternateCodepoint: null, : :
-        // // null, U+1D1BA: null, ,
-        // // uniE8C8 : null,
-        // // // mensuralNoteheadSemibrevisBlackVoid
-        // // uniE8CA : null,
-        // // // mensuralNoteheadSemibrevisBlackVoidInverted
-        // // uniE8CB : null,
-        // // // mensuralNoteheadSemibrevisVoid alternateCodepoint: null, : :
-        // // null, U+1D1B9: null, ,
-        // // uniE8C9 : null,
-        // // // mensuralNoteheadSemiminimaWhite
-        // // uniE8CD : null,
-        // // // mensuralProlation1 alternateCodepoint: null, : : null, U+1D1C7:
-        // // null, ,
-        // // uniE8A0 : null,
-        // // // mensuralProlation10alternateCodepoint: null, : : null, U+1D1CE:
-        // // null, ,
-        // // uniE8A9 : null,
-        // // // mensuralProlation11
-        // // uniE8AA : null,
-        // // // mensuralProlation2alternateCodepoint: null, : : null, U+1D1C8:
-        // // null, ,
-        // // uniE8A1 : null,
-        // // // mensuralProlation3alternateCodepoint: null, : : null, U+1D1C9:
-        // // null, ,
-        // // uniE8A2 : null,
-        // // // mensuralProlation4
-        // // uniE8A3 : null,
-        // // // mensuralProlation5alternateCodepoint: null, : : null, U+1D1CA:
-        // // null, ,
-        // // uniE8A4 : null,
-        // // // mensuralProlation6alternateCodepoint: null, : : null, U+1D1CB:
-        // // null, ,
-        // // uniE8A5 : null,
-        // // // mensuralProlation7alternateCodepoint: null, : : null, U+1D1CC:
-        // // null, ,
-        // // uniE8A6 : null,
-        // // // mensuralProlation8
-        // // uniE8A7 : null,
-        // // // mensuralProlation9alternateCodepoint: null, : : null, U+1D1CD:
-        // // null, ,
-        // // uniE8A8 : null,
-        // // // mensuralProlationCombiningDot
-        // // uniE8AB : null,
-        // // // mensuralProlationCombiningDotVoid
-        // // uniE8AF : null,
-        // // // mensuralProlationCombiningStroke
-        // // uniE8B0 : null,
-        // // // mensuralProlationCombiningThreeDots
-        // // uniE8AD : null,
-        // // // mensuralProlationCombiningThreeDotsTri
-        // // uniE8AE : null,
-        // // // mensuralProlationCombiningTwoDots
-        // // uniE8AC : null,
-        // // // mensuralProportion1
-        // // uniE8B1 : null,
-        // // // mensuralProportion2
-        // // uniE8B2 : null,
-        // // // mensuralProportion3
-        // // uniE8B3 : null,
-        // // // mensuralProportion4
-        // // uniE8B4 : null,
-        // // // mensuralProportionMajor
-        // // uniE8B6 : null,
-        // // // mensuralProportionMinor
-        // // uniE8B5 : null,
-        // // // mensuralRestBrevisalternateCodepoint: null, : : null, U+1D1C3:
-        // // null, ,
-        // // uniE953 : null,
-        // // // mensuralRestFusa
-        // // uniE957 : null,
-        // // // mensuralRestLongaImperfectaalternateCodepoint: null, : : null,
-        // // U+1D1C2: null, ,
-        // // uniE952 : null,
-        // // // mensuralRestLongaPerfectaalternateCodepoint: null, : : null,
-        // // U+1D1C1: null, ,
-        // // uniE951 : null,
-        // // // mensuralRestMaxima
-        // // uniE950 : null,
-        // // // mensuralRestMinimaalternateCodepoint: null, : : null, U+1D1C5:
-        // // null, ,
-        // // uniE955 : null,
-        // // // mensuralRestSemibrevisalternateCodepoint: null, : : null,
-        // // U+1D1C4: null, ,
-        // // uniE954 : null,
-        // // // mensuralRestSemifusa
-        // // uniE958 : null,
-        // // // mensuralRestSemiminimaalternateCodepoint: null, : : null,
-        // // U+1D1C6: null, ,
-        // // uniE956 : null,
-        // // // mensuralSignumDown
-        // // uniE961 : null,
-        // // // mensuralSignumUp
-        // // uniE960 : null,
-        // // // mensuralTempusImperfectumHoriz
-        // // uniE8BA : null,
-        // // // mensuralTempusPerfectumHoriz
-        // // uniE8B9 : null,
-        // // // mensuralWhiteBrevis
-        // // uniE8EE : null,
-        // // // mensuralWhiteFusa
-        // // uniE8F1 : null,
-        // // // mensuralWhiteLonga
-        // // uniE8ED : null,
-        // // // mensuralWhiteMaxima
-        // // uniE8EC : null,
-        // // // mensuralWhiteMinima
-        // // uniE8EF : null,
-        // // // mensuralWhiteSemiminima
-        // // uniE8F0 : null
-        //
-        // // ########################### CMN #############################
-        // // uniE09F_uniE080 : 'v0',
-        // // uniE09F_uniE081 : 'v1',
-        // // uniE09F_uniE082 : 'v2',
-        // // uniE09F_uniE083 : 'v3',
-        // // uniE09F_uniE084 : 'v4',
-        // // uniE09F_uniE085 : 'v5',
-        // // uniE09F_uniE086 : 'v6',
-        // // uniE09F_uniE087 : 'v7',
-        // // uniE09F_uniE088 : 'v8',
-        // // uniE09F_uniE089 : 'v9',
-        // // u0266D : 'v44',
-        // // u0266E : 'v4e',
-        // // uniE004 : 'v10',
-        // // u0266F : 'v18',
-        // // uniE003 : 'v1b',
-        // // uniE050: 'v83',
-        // // uniE05C: 'vad',
-        // // uniE061: 'v79',
-        // // uniE046: 'v8c',
-        // // uniE0DC: 'v2d',
-        // // uniE0DD: 'v70',
-        // // uniE092: 'v9c',
-        // // uniE093: 'v84',
-        // // uniE047: 'v4d',
-        // // uniE0A1: null, // CMN Breve traditional form
-        // // uniE0A2: 'v1d',
-        // // uniE0A3: 'v81',
-        // // uniE0A4: 'vb'
-        //
-        // uniE050: null,
-        // uniE052 : null,
-        // uniE0A1 : null, // CMN Breve note traditional
-        // // form
-        // //uniE1B1: 'noteDoubleWholeSquare', // CMN Breve note traditional form
-        // // uniE4C0: 'restLonga', // CMN Longa rest traditional form
-        // uniE4C1 : null // CMN Breve rest traditional form
-        //
-        // },
-        // start : 0,
-        // end: 100,
-        autoAdd : '.*'
+        /*
+         * all glyphs specified in 'glyphNames' get converted (when present
+         * in the font). If a string value is specified for a glyph name, the
+         * glyph will be renamed to that value; if the value is null, the
+         * original glyph name will be kept.
+         */
+        glyphNames : {
+          uniE941 : 'newName', // convert glyph, name it 'newName'
+          uniE941 : null // covert glyph, keep old name
+        },
+        /**
+         * A string converted to a regular expression to include glyphs not
+         * specified in {@link #glyphNames}. When the string is empty, no glyphs
+         * will be added, when set to '.*', all glyphs will be added.
+         * @property {String} autoAdd
+         */
+        autoAdd : '.*',
+        /**
+         * In order to get a subset of the glyphs selected with 'glyphNames' /
+         * 'autoAdd', specify a range with the 'start' and 'end' properties.
+         */
+        start : 0,
+        end : 100
       };
 
       var c = new Converter(config);
 
 		</script>
-
 	</body>
 </html>
+<!--
+// glyphNames : {
+// // merken: uniE0A1 = CMN Breve!!
+//
+// // // medRenFlatHardB
+// // uniE941 : null,
+// // // medRenFlatSoftB
+// // uniE940 : null,
+// // // medRenFlatWithDot
+// // uniE944 : null,
+// // // medRenGClefCMN
+// // uniE974 : null,
+// // // medRenLiquescenceCMN
+// // uniE972 : null,
+// // // medRenLiquescentAscCMN
+// // uniE976 : null,
+// // // medRenLiquescentDescCMN
+// // uniE977 : null,
+// // // medRenNatural
+// // uniE942 : null,
+// // // medRenNaturalWithCross
+// // uniE945 : null,
+// // // medRenOriscusCMN
+// // uniE97A : null,
+// // // medRenPlicaCMN
+// // uniE973 : null,
+// // // medRenPunctumCMN
+// // uniE975 : null,
+// // // medRenQuilismaCMN
+// // uniE978 : null,
+// // // medRenSharpCroix alternateCodepoint: null, : : null, U+1D1CF:
+// // null, ,
+// // uniE943 : null,
+// // // medRenStrophicusCMN
+// // uniE979 : null,
+// // // mensuralAlterationSign
+// // uniE96C : null,
+// // // mensuralBlackBrevis
+// // uniE8E2 : null,
+// // // mensuralBlackBrevisVoid
+// // uniE8E6 : null,
+// // // mensuralBlackDragma
+// // uniE8EA : null,
+// // // mensuralBlackLonga
+// // uniE8E1 : null,
+// // // mensuralBlackMaxima
+// // uniE8E0 : null,
+// // // mensuralBlackMinima
+// // uniE8E4 : null,
+// // // mensuralBlackMinimaVoid
+// // uniE8E8 : null,
+// // // mensuralBlackSemibrevis
+// // uniE8E3 : null,
+// // // mensuralBlackSemibrevisCaudata
+// // uniE8E9 : null,
+// // // mensuralBlackSemibrevisOblique
+// // uniE8EB : null,
+// // // mensuralBlackSemibrevisVoid
+// // uniE8E7 : null,
+// // // mensuralBlackSemiminima
+// // uniE8E5 : null,
+// // // mensuralCclef
+// // uniE897 : null,
+// // // mensuralCclefGregorian
+// // uniE896 : null,
+// // // mensuralCclefPetrucci
+// // uniE898 : null,
+// // // mensuralColorationEndRound
+// // uniE96B : null,
+// // // mensuralColorationEndSquare
+// // uniE969 : null,
+// // // mensuralColorationStartRound
+// // uniE96A : null,
+// // // mensuralColorationStartSquare
+// // uniE968 : null,
+// // // mensuralCombStemDiagonal
+// // uniE8D0 : null,
+// // // mensuralCombStemDown
+// // uniE8CF : null,
+// // // mensuralCombStemDownFlagExtended
+// // uniE8D8 : null,
+// // // mensuralCombStemDownFlagFlared
+// // uniE8D6 : null,
+// // // mensuralCombStemDownFlagFusa
+// // uniE8DC : null,
+// // // mensuralCombStemDownFlagLeft
+// // uniE8D4 : null,
+// // // mensuralCombStemDownFlagRight
+// // uniE8D2 : null,
+// // // mensuralCombStemDownFlagSemiminima
+// // uniE8DA : null,
+// // // mensuralCombStemUp
+// // uniE8CE : null,
+// // // mensuralCombStemUpFlagExtended
+// // uniE8D7 : null,
+// // // mensuralCombStemUpFlagFlared
+// // uniE8D5 : null,
+// // // mensuralCombStemUpFlagFusa
+// // uniE8DB : null,
+// // // mensuralCombStemUpFlagLeft
+// // uniE8D3 : null,
+// // // mensuralCombStemUpFlagRight
+// // uniE8D1 : null,
+// // // mensuralCombStemUpFlagSemiminima
+// // uniE8D9 : null,
+// // // mensuralCustosCheckmark
+// // uniE966 : null,
+// // // mensuralCustosDown
+// // uniE963 : null,
+// // // mensuralCustosTurn
+// // uniE967 : null,
+// // // mensuralCustosUp
+// // uniE962 : null,
+// // // mensuralFClefAncient
+// // uniE893 : null,
+// // // mensuralFclef
+// // uniE894 : null,
+// // // mensuralFclefGregorian
+// // uniE892 : null,
+// // // mensuralFclefPetrucci
+// // uniE895 : null,
+// // // mensuralGclef
+// // uniE890 : null,
+// // // mensuralGclefPetrucci
+// // uniE891 : null,
+// // // mensuralModusImperfectumVert
+// // uniE8B8 : null,
+// // // mensuralModusPerfectumVert
+// // uniE8B7 : null,
+// // // mensuralNoteheadLongaBlack
+// // uniE8C4 : null,
+// // // mensuralNoteheadLongaBlackVoid
+// // uniE8C6 : null,
+// // // mensuralNoteheadLongaVoidalternateCodepoint: null, : : null,
+// // U+1D1B7: null, ,
+// // uniE8C5 : null,
+// // // mensuralNoteheadLongaWhite
+// // uniE8C7 : null,
+// // // mensuralNoteheadMaximaBlack
+// // uniE8C0 : null,
+// // // mensuralNoteheadMaximaBlackVoid
+// // uniE8C2 : null,
+// // // mensuralNoteheadMaximaVoidalternateCodepoint: null, : : null,
+// // U+1D1B6: null, ,
+// // uniE8C1 : null,
+// // // mensuralNoteheadMaximaWhite
+// // uniE8C3 : null,
+// // // mensuralNoteheadMinimaWhite
+// // uniE8CC : null,
+// // // mensuralNoteheadSemibrevisBlackalternateCodepoint: null, : :
+// // null, U+1D1BA: null, ,
+// // uniE8C8 : null,
+// // // mensuralNoteheadSemibrevisBlackVoid
+// // uniE8CA : null,
+// // // mensuralNoteheadSemibrevisBlackVoidInverted
+// // uniE8CB : null,
+// // // mensuralNoteheadSemibrevisVoid alternateCodepoint: null, : :
+// // null, U+1D1B9: null, ,
+// // uniE8C9 : null,
+// // // mensuralNoteheadSemiminimaWhite
+// // uniE8CD : null,
+// // // mensuralProlation1 alternateCodepoint: null, : : null, U+1D1C7:
+// // null, ,
+// // uniE8A0 : null,
+// // // mensuralProlation10alternateCodepoint: null, : : null, U+1D1CE:
+// // null, ,
+// // uniE8A9 : null,
+// // // mensuralProlation11
+// // uniE8AA : null,
+// // // mensuralProlation2alternateCodepoint: null, : : null, U+1D1C8:
+// // null, ,
+// // uniE8A1 : null,
+// // // mensuralProlation3alternateCodepoint: null, : : null, U+1D1C9:
+// // null, ,
+// // uniE8A2 : null,
+// // // mensuralProlation4
+// // uniE8A3 : null,
+// // // mensuralProlation5alternateCodepoint: null, : : null, U+1D1CA:
+// // null, ,
+// // uniE8A4 : null,
+// // // mensuralProlation6alternateCodepoint: null, : : null, U+1D1CB:
+// // null, ,
+// // uniE8A5 : null,
+// // // mensuralProlation7alternateCodepoint: null, : : null, U+1D1CC:
+// // null, ,
+// // uniE8A6 : null,
+// // // mensuralProlation8
+// // uniE8A7 : null,
+// // // mensuralProlation9alternateCodepoint: null, : : null, U+1D1CD:
+// // null, ,
+// // uniE8A8 : null,
+// // // mensuralProlationCombiningDot
+// // uniE8AB : null,
+// // // mensuralProlationCombiningDotVoid
+// // uniE8AF : null,
+// // // mensuralProlationCombiningStroke
+// // uniE8B0 : null,
+// // // mensuralProlationCombiningThreeDots
+// // uniE8AD : null,
+// // // mensuralProlationCombiningThreeDotsTri
+// // uniE8AE : null,
+// // // mensuralProlationCombiningTwoDots
+// // uniE8AC : null,
+// // // mensuralProportion1
+// // uniE8B1 : null,
+// // // mensuralProportion2
+// // uniE8B2 : null,
+// // // mensuralProportion3
+// // uniE8B3 : null,
+// // // mensuralProportion4
+// // uniE8B4 : null,
+// // // mensuralProportionMajor
+// // uniE8B6 : null,
+// // // mensuralProportionMinor
+// // uniE8B5 : null,
+// // // mensuralRestBrevisalternateCodepoint: null, : : null, U+1D1C3:
+// // null, ,
+// // uniE953 : null,
+// // // mensuralRestFusa
+// // uniE957 : null,
+// // // mensuralRestLongaImperfectaalternateCodepoint: null, : : null,
+// // U+1D1C2: null, ,
+// // uniE952 : null,
+// // // mensuralRestLongaPerfectaalternateCodepoint: null, : : null,
+// // U+1D1C1: null, ,
+// // uniE951 : null,
+// // // mensuralRestMaxima
+// // uniE950 : null,
+// // // mensuralRestMinimaalternateCodepoint: null, : : null, U+1D1C5:
+// // null, ,
+// // uniE955 : null,
+// // // mensuralRestSemibrevisalternateCodepoint: null, : : null,
+// // U+1D1C4: null, ,
+// // uniE954 : null,
+// // // mensuralRestSemifusa
+// // uniE958 : null,
+// // // mensuralRestSemiminimaalternateCodepoint: null, : : null,
+// // U+1D1C6: null, ,
+// // uniE956 : null,
+// // // mensuralSignumDown
+// // uniE961 : null,
+// // // mensuralSignumUp
+// // uniE960 : null,
+// // // mensuralTempusImperfectumHoriz
+// // uniE8BA : null,
+// // // mensuralTempusPerfectumHoriz
+// // uniE8B9 : null,
+// // // mensuralWhiteBrevis
+// // uniE8EE : null,
+// // // mensuralWhiteFusa
+// // uniE8F1 : null,
+// // // mensuralWhiteLonga
+// // uniE8ED : null,
+// // // mensuralWhiteMaxima
+// // uniE8EC : null,
+// // // mensuralWhiteMinima
+// // uniE8EF : null,
+// // // mensuralWhiteSemiminima
+// // uniE8F0 : null
+//
+// // ########################### CMN #############################
+// // uniE09F_uniE080 : 'v0',
+// // uniE09F_uniE081 : 'v1',
+// // uniE09F_uniE082 : 'v2',
+// // uniE09F_uniE083 : 'v3',
+// // uniE09F_uniE084 : 'v4',
+// // uniE09F_uniE085 : 'v5',
+// // uniE09F_uniE086 : 'v6',
+// // uniE09F_uniE087 : 'v7',
+// // uniE09F_uniE088 : 'v8',
+// // uniE09F_uniE089 : 'v9',
+// // u0266D : 'v44',
+// // u0266E : 'v4e',
+// // uniE004 : 'v10',
+// // u0266F : 'v18',
+// // uniE003 : 'v1b',
+// // uniE050: 'v83',
+// // uniE05C: 'vad',
+// // uniE061: 'v79',
+// // uniE046: 'v8c',
+// // uniE0DC: 'v2d',
+// // uniE0DD: 'v70',
+// // uniE092: 'v9c',
+// // uniE093: 'v84',
+// // uniE047: 'v4d',
+// // uniE0A1: null, // CMN Breve traditional form
+// // uniE0A2: 'v1d',
+// // uniE0A3: 'v81',
+// // uniE0A4: 'vb'
+//
+// uniE050: null,
+// uniE052 : null,
+// uniE0A1 : null, // CMN Breve note traditional
+// // form
+// //uniE1B1: 'noteDoubleWholeSquare', // CMN Breve note traditional form
+// // uniE4C0: 'restLonga', // CMN Longa rest traditional form
+// uniE4C1 : null // CMN Breve rest traditional form
+//
+// },
+-->
 

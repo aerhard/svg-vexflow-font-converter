@@ -33,5 +33,6 @@ module.exports = function(grunt) {
 
 
   // Tasks.
+  grunt.registerTask('default', ['connect', 'watch']);
   grunt.registerTask('run', ['connect', 'watch']);
 }
