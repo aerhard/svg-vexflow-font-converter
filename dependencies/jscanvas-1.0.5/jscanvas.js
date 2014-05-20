@@ -319,7 +319,7 @@ jsContext2d.prototype.clip = function () {
     return this.emitFunc ('clip', arguments);
 };
 jsContext2d.prototype.quadraticCurveTo = function () {
-    return this.emitFunc ('quandraticCurveTo', arguments);
+    return this.emitFunc ('quadraticCurveTo', arguments);
 };
 jsContext2d.prototype.bezierCurveTo = function () {
     return this.emitFunc ('bezierCurveTo', arguments);

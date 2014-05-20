@@ -145,10 +145,10 @@ Converter.prototype = {
   },
 
   addToVex : function(fn, arg) {
-    var me = this, isBezier = false;
+    var me = this, isCurve = false;
     switch (fn) {
       case 'bezierCurveTo':
-        isBezier = true;
+        isCurve = true;
         this.tempOut += 'b ';
         break;
       case 'lineTo':
@@ -158,6 +158,7 @@ Converter.prototype = {
         this.tempOut += 'm ';
         break;
       case'quadraticCurveTo':
+        isCurve = true;
         this.tempOut += 'q ';
         break;
       // default:
@@ -167,7 +168,7 @@ Converter.prototype = {
     arg = arg.replace(/,/g, ' ');
     var argTokens = arg.split(' ');
 
-    if (isBezier) {
+    if (isCurve) {
       var lastTwo = argTokens.splice(-2);
       argTokens.unshift(lastTwo[0], lastTwo[1]);
     }

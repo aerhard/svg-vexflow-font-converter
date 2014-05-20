@@ -21,11 +21,11 @@
         /**
          * the path to the SVG font file. Required.
          */
-        fontFile : '../dependencies/bravura-0.85/svg/Bravura.svg',
+        fontFile : '../dependencies/bravura-0.9/svg/Bravura.svg',
         /**
          * the path to a file with a glyph name map. Optional.
          */
-        glyphNamesFile : '../dependencies/smufl-metadata-0.85/glyphnames.json',
+        glyphNamesFile : '../dependencies/smufl-metadata-0.9/glyphnames.json',
         /**
          * The glyph scale. Required.
          *
@@ -40,23 +40,23 @@
          * glyph will be renamed to that value; if the value is null, the
          * original glyph name will be kept.
          */
-        glyphNames : {
-          uniE941 : 'newName', // convert glyph, name it 'newName'
-          uniE941 : null // covert glyph, keep old name
-        },
+        // glyphNames : {
+          // "uniE050.ss1" : 'newName', // convert glyph, name it 'newName'
+          // uniE941 : null // covert glyph, keep old name
+        // },
         /**
          * A string converted to a regular expression to include glyphs not
          * specified in {@link #glyphNames}. When the string is empty, no glyphs
          * will be added, when set to '.*', all glyphs will be added.
          * @property {String} autoAdd
          */
-        autoAdd : '.*',
+        autoAdd : '.*'
         /**
          * In order to get a subset of the glyphs selected with 'glyphNames' /
          * 'autoAdd', specify a range with the 'start' and 'end' properties.
          */
-        start : 0,
-        end : 100
+        // ,start : 0,
+        // end : 100
       };
 
       var c = new Converter(config);
