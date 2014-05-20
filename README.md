@@ -22,8 +22,8 @@ $ bower install
 
 Type `grunt run` to launch a server on localhost:8000 and navigate to `localhost:8000/src/converter.html` in your browser. 
 The output will be rendered to the DOM and can be copied from there.
-For comments on the converter options, see the JSDoc comments in `converter.html`.
-In order to use the new VexFlow font, save the generated output a JavaScript file in the file system (for an example file, see `src/bravura_all.js`).
+See the JSDoc comments in `converter.html` for the converter options.
+In order to use the new VexFlow font, save the generated output to a JavaScript file in the file system (for an example file, see `src/bravura_all.js`).
 For a rendition of the generated `src/bravura_all.js` font with VexFlow, see `localhost:8000/src/glyphs.html` (the glyphs are quite small in order to fit them as a whole on a single HTML5 canvas; change `glyphs.html` to adjust everything as needed).
 
 ## Note
