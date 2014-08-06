@@ -1,4 +1,4 @@
-var Converter = function(cfg) {
+var Converter = function (cfg) {
   this.cfg = cfg;
   this.prepareJsCanvas();
   this.convert();
@@ -10,7 +10,7 @@ var Converter = function(cfg) {
 
 Converter.prototype = {
 
-  loadFile : function(xmlDoc) {
+  loadFile : function (xmlDoc) {
     if (window.XMLHttpRequest) {
       xmlhttp = new XMLHttpRequest();
     } else {
@@ -19,12 +19,13 @@ Converter.prototype = {
     xmlhttp.open("GET", xmlDoc, false);
     xmlhttp.send();
     var result = xmlhttp.responseText;
-    if (!result)
+    if (!result) {
       throw "Error loading xml document: '" + xmlDoc + "' cannot be loaded!"
+    }
     return result;
   },
 
-  createXMLDoc : function(str) {
+  createXMLDoc : function (str) {
     var xmlDoc, parser;
     if (window.DOMParser) {
       parser = new DOMParser();
@@ -37,11 +38,11 @@ Converter.prototype = {
     return xmlDoc;
   },
 
-  scale : function(val) {
+  scale : function (val) {
     return Math.round(val * this.cfg.scale);
   },
 
-  convert : function() {
+  convert : function () {
     var me = this;
     var vexFont = {};
     var vexGlyphs = {};
@@ -49,6 +50,9 @@ Converter.prototype = {
     var post = '</svg>';
     var svg = this.createXMLDoc(this.loadFile(this.cfg.fontFile));
     var g, fileGlyphNamesOriginal, fileGlyphNames = {};
+
+    me.initXCanvas();
+
     if (this.cfg.glyphNamesFile) {
       fileGlyphNamesOriginal = JSON.parse(this.loadFile(this.cfg.glyphNamesFile));
       for (g in fileGlyphNamesOriginal) {
@@ -79,7 +83,7 @@ Converter.prototype = {
       var d = ele.getAttribute('d');
       var glyphName = ele.getAttribute('glyph-name').replace(/_.*/, '');
       if (regex.test(glyphName) || this.cfg.glyphNames.hasOwnProperty(glyphName)) {
-        this.runJsCanvas(pre + '<path d="' + d + '" transform="scale(1, -1) translate (0,-800)"/>' + post, glyphName);
+        this.runCanvg(pre + '<path d="' + d + '" transform="scale(1, -1) translate (0,-800)"/>' + post);
         if (this.cfg.glyphNames[glyphName]) {
           glyphName = this.cfg.glyphNames[glyphName];
         } else if (fileGlyphNames[glyphName]) {
@@ -133,10 +137,10 @@ Converter.prototype = {
   },
 
   // TODO solve with inheritance!?
-  prepareJsCanvas : function() {
+  prepareJsCanvas : function () {
     var me = this;
     jsContext2d.prototype.emitFuncOrig = jsContext2d.prototype.emitFunc;
-    jsContext2d.prototype.emitFunc = function(fn, args, fnprefix) {
+    jsContext2d.prototype.emitFunc = function (fn, args, fnprefix) {
       this.emitFuncOrig(fn, args, fnprefix);
       if (argstr.length) {
         me.addToVex(fn, argstr.substr(0, argstr.length - 1));
@@ -144,7 +148,7 @@ Converter.prototype = {
     };
   },
 
-  addToVex : function(fn, arg) {
+  addToVex : function (fn, arg) {
     var me = this, isCurve = false;
     switch (fn) {
       case 'bezierCurveTo':
@@ -184,16 +188,31 @@ Converter.prototype = {
     }
   },
 
-  runJsCanvas : function(svgXML, name) {
-    var ycanvas = document.getElementById('canvas');
-    xcanvas = new jsCanvas('jscanvastest');
-    xcanvas.canvas.style.display = 'none';
-    xcanvas.compile(svgXML, function() {
-      eval(xcanvas.toString());
-      var yctx = ycanvas.getContext('2d');
-      var cantest = new jscanvastest(yctx);
+  initXCanvas : function() {
+    var me = this;
+    me.xcanvas = document.createElement('canvas');
+    //  document.body.appendChild(me.canvas);
+    me.xcanvas.jsctx = new jsContext2d(me.xcanvas, 'jscanvastest');
+    me.xcanvas.real2dContext = me.xcanvas.getContext('2d');
+    me.xcanvas.getContext = function (type) {
+      return (type === '2d') ? this.jsctx : null;
+    }
+  },
 
+  runCanvg : function (svgXML) {
+    var me = this;
+    //    xcanvas.canvas.style.display = 'none';
+
+    canvg(me.xcanvas, svgXML, {
+      ignoreDimensions : false,
+      ignoreClear : true,
+      ignoreMouse : true,
+      renderCallback : function () {
+        me.xcanvas.jsctx.done();
+        return me.xcanvas.jsctx.toString();
+      }
     });
+
   }
 };
 
